@@ -1,0 +1,78 @@
+var navigateTo = function(target,first){
+	var navQuery =target;
+	var padding = $('header').height();
+	
+	$("html, body").animate({ 
+		scrollTop:$(navQuery).position().top-padding
+	}, "fast",
+	function() {
+		if(first!==false)
+		navigateTo(target,false)
+	});
+}
+
+
+
+$(function(){
+	
+	$(".burger, .burger_close").click(function(){
+		$("body").toggleClass('navopen');
+	});
+	
+	
+	$(".team .list a").click(function(e){
+		
+		e.preventDefault();
+		
+		var target = $(this).attr("href");
+		
+		history.pushState({target:$(this).attr("href")}, null, target);
+		navigateTo(target);
+		
+		$(".team .list a").removeClass("on");
+		$(this).addClass("on");
+		
+		$(".team .detail .ma").removeClass("on");
+		$(".team .detail .ma[data-id='"+$(this).attr('data-id')+"']").addClass("on");
+		
+		return false;
+	});
+	
+	
+	$(".schaedlinge .filter a").click(function(e){
+		$(".schaedlinge .search").val('');
+		$(".schaedlinge .filter a").removeClass("on");
+		$(this).addClass("on");
+		
+		
+		if($(this).attr('data-filter'))
+		{
+			$(".schaedlinge .list a").addClass("off");
+			$(".schaedlinge .list a[data-kategorie='"+$(this).attr('data-filter')+"']").removeClass("off");
+		}
+		else
+			$(".schaedlinge .list a").removeClass("off");
+
+	});
+	
+	$(".schaedlinge .search").quicksearch('.schaedlinge .list a',{
+		'onBefore': function () {
+			$(".schaedlinge .filter a").removeClass("on").first().addClass("on");
+		},
+		'show': function () {
+			$(this).removeClass('off');
+		},
+		'hide': function () {
+			$(this).addClass('off');
+		}
+	});
+	
+	$("[data-fancybox]").fancybox({
+		touch:false,
+		autoFocus:false
+	});
+})
+
+
+
+	
